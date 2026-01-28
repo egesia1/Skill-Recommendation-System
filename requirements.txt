@@ -1,0 +1,150 @@
+# Skill Recommendation System - Complete Dependencies
+# ======================================================
+#
+# This file lists ALL dependencies required for the Skill Recommendation System,
+# including external packages and Python standard library modules.
+#
+# Python Version: 3.8+ (tested with Python 3.12.2)
+#
+# Installation:
+#   pip install -r requirements.txt
+#
+# Note: Standard library modules are listed for complete documentation.
+# They are included with Python and do not require installation.
+#
+# IMPORTANT: This is a pip requirements file. For conda environments, use:
+#   conda env create -f environment.yml
+# Conda should NOT be listed here - it's a package manager, not a Python package.
+#
+# IMPORTANT: This is a pip requirements file. For conda environments, use:
+#   conda env create -f environment.yml
+# Conda should NOT be listed here - it's a package manager, not a Python package.
+
+# ======================================================
+# External Dependencies (require pip install)
+# ======================================================
+
+# Numerical computing and linear algebra
+numpy>=1.21.0          # Array operations, matrix computations
+scipy>=1.7.0            # Sparse matrices (csr_matrix), linear algebra (solve)
+pandas>=2.0.0          # Data manipulation and analysis
+
+
+# ======================================================
+# Notebook Requirements (for Jupyter notebook execution)
+# ======================================================
+# Required to run complete_pipeline.ipynb notebook
+
+jupyter>=1.0.0        # Jupyter notebook environment
+ipykernel>=6.0.0      # IPython kernel for Jupyter
+notebook>=6.0.0       # Jupyter notebook web application
+
+# Visualization
+matplotlib>=3.5.0     # Plotting and visualization
+
+# ======================================================
+# GPU Support (Optional - for GPU-accelerated training)
+# ======================================================
+# Uncomment the following if you want GPU acceleration:
+# Note: Current implementation uses CPU-only (numpy/scipy).
+# For GPU support, you would need to modify the code to use:
+# - cupy>=12.0.0          # GPU-accelerated NumPy (CUDA)
+# - jax[cuda12]>=0.4.0    # JAX with CUDA support (alternative)
+# 
+# WARNING: GPU support requires CUDA toolkit and compatible GPU.
+# The current WALS implementation is CPU-only by default.
+# See docs/GPU_SUPPORT.md for details on adding GPU support.
+
+# ======================================================
+# Python Standard Library Dependencies
+# ======================================================
+# The following modules are part of Python's standard library.
+# They are listed here for complete documentation of system dependencies.
+# Python version required: 3.8+ (recommended: 3.9+)
+
+# Core system modules
+# sys                    # System-specific parameters and functions
+# os                     # Operating system interface
+
+# Data serialization and persistence
+# pickle                 # Object serialization (model saving/loading)
+# sqlite3                # SQLite database interface
+
+# File I/O and archives
+# csv                    # CSV file reading and writing
+# zipfile                # ZIP archive handling
+# pathlib                # Object-oriented filesystem paths
+
+# Date and time
+# datetime               # Date and time objects
+# time                   # Time-related functions
+
+# Numeric operations
+# decimal                # Decimal floating point arithmetic
+
+# Utilities
+# logging                # Logging facility
+# argparse               # Command-line argument parsing
+# tempfile               # Temporary file and directory creation
+# typing                 # Type hints support
+
+# ======================================================
+# Usage by Component
+# ======================================================
+#
+# WALS Algorithm (src/wals.py):
+#   - numpy: Matrix operations, array computations
+#   - scipy.sparse: Sparse matrix representation (csr_matrix)
+#   - scipy.linalg: Linear algebra (solve)
+#   - logging: Progress logging
+#   - typing: Type hints
+#
+# Data Loader (src/data_loader.py):
+#   - sqlite3: Database queries
+#   - logging: Import logging
+#   - typing: Type hints
+#
+# Trainer (src/trainer.py):
+#   - numpy: Array operations
+#   - scipy.sparse: Sparse matrix construction
+#   - pickle: Model serialization
+#   - os: File system operations
+#   - time: Timing measurements
+#   - logging: Training progress
+#   - typing: Type hints
+#
+# Recommender (src/recommender.py):
+#   - numpy: Score computation (matrix multiplication)
+#   - pickle: Model loading
+#   - logging: Recommendation logging
+#   - typing: Type hints
+#
+# Import Scripts (scripts/import_*.py):
+#   - sqlite3: Database creation and data insertion
+#   - csv: CSV file parsing
+#   - zipfile: ZIP archive extraction
+#   - pathlib: Path handling
+#   - datetime: Date parsing
+#   - decimal: Decimal arithmetic (ONET)
+#   - tempfile: Temporary directory creation
+#   - argparse: Command-line interface
+#   - logging: Import progress
+#   - os, sys: System operations
+#
+# Example Scripts (examples/*.py):
+#   - argparse: Command-line interface
+#   - logging: Output logging
+#   - os, sys: System operations
+#
+# Notebook (complete_pipeline.ipynb):
+#   - numpy: Array operations
+#   - matplotlib: Visualizations (bar charts, tables)
+#   - sqlite3: Database queries
+#   - zipfile: ZIP archive extraction
+#   - tempfile: Temporary directory creation
+#   - pathlib: Path handling
+#   - urllib.request: HTTP downloads (ONET)
+#   - logging: Progress logging
+#   - os, sys: System operations
+#   - jupyter: Notebook execution environment
+#   - ipykernel: Python kernel for notebooks

@@ -1,0 +1,19 @@
+name: skill_recommendation
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - numpy>=1.21.0
+  - pandas>=2.0.0
+  - scipy>=1.7.0
+  - matplotlib>=3.5.0
+  - jupyter>=1.0.0
+  - ipykernel>=6.0.0
+  - notebook>=6.0.0
+  - pip:
+    # Additional packages from requirements.txt if needed via pip
+  - pip:
+    # Additional packages from requirements.txt if needed
+    # (most are already covered by conda packages above)
