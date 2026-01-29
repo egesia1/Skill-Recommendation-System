@@ -4,6 +4,19 @@
 
 ---
 
+## Context & Problem
+
+**The Challenge:**
+When companies design new job positions, selecting the right set of skills and tasks from thousands of possibilities (e.g., ~14,000 in ESCO, ~18,000 in O*NET) is a complex and time-consuming challenge. HR managers often start with a few core competencies but struggle to identify related, complementary skills that define a complete role.
+
+**Our Solution:**
+We provide an intelligent recommendation engine that acts as a **co-pilot for job design**. As the user builds a job profile by adding initial skills or tasks, our system analyzes the latent relationships between occupations and skills to suggest the most relevant missing items in real-time.
+
+**Real-World Application:**
+This system is **already live in production** within the **[KS-Agents](https://ks-agents.com)** Soft HR application, where it powers the job creation workflow. It has also been successfully demonstrated in operation as a response to a **Call4Startup** promoted by a major multinational corporation, validating its effectiveness in enterprise scenarios.
+
+---
+
 ## Overview
 
 This is a standalone implementation of a skill recommendation system based on **Weighted Matrix Factorisation (WMF)** using the **Weighted Alternating Least Squares (WALS)** algorithm.
@@ -306,8 +319,7 @@ The trained model is saved as a `.pkl` file with the following structure:
 
 **Current Implementation:**
 - **CPU-only**: Uses numpy/scipy (no GPU acceleration)
-- **Memory**: 2-4 GB RAM recommended
-- **Storage**: ~100-200 MB for databases and models
+- **Storage**: ~200 MB for databases and models
 
 **GPU Support:**
 - Currently not implemented (CPU-only)
@@ -327,18 +339,6 @@ We use **Grid Search** to optimize hyperparameters:
 
 The notebook `complete_pipeline.ipynb` includes a section to run this grid search and automatically select the best parameters.
 
-### Performance
-
-Typical training times:
-- **ESCO** (3K × 14K matrix): 5-10 minutes (50 factors, 15 iterations)
-- **ONET task** (1K × 18K matrix): ~5-15 min (50 factors, 15 iterations)
-- **ONET tech skill** (1K × 8.7K matrix): ~2-8 min (50 factors, 15 iterations)
-
-Error reduction:
-- **Simple configs**: 60-70%
-- **Medium configs**: 75-80%
-- **Complex configs**: 80-85%
-
 ---
 
 ## Testing
@@ -355,7 +355,7 @@ python -m pytest tests/
 
 - **Algorithm**: `docs/algorithm.md` - Detailed algorithm explanation
 - **Data Setup**: `DATA_SETUP.md` - Guide for downloading and importing ESCO/ONET data
-- **Presentation**: `PRESENTATION.md` - Guide for presenting the system
+- **Presentation**: `PRESENTATION.md` - A more discursive guide that explains and presents the system
 
 ---
 
@@ -375,9 +375,9 @@ Internal use only.
 
 ---
 
-## Authors
+## Author
 
-Business AI Team
+Luca Ricatti
 
 ---
 

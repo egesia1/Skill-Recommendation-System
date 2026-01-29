@@ -1,8 +1,30 @@
-# Data Directory
+# Data Resources for Skill Recommendation
 
-This directory contains the source data files and generated databases for the Skill Recommendation System.
+This directory manages the foundational datasets used to train the Matrix Factorization models for the Skill Recommendation System. It contains both the raw source files and the processed SQLite databases.
 
-## 📦 Source Files
+## Overview of Datasets
+
+The system relies on two major occupational taxonomies to learn the latent relationships between jobs and skills.
+
+### 1. ESCO (European Skills, Competences, Qualifications and Occupations)
+*   **Region:** Europe
+*   **Focus:** Standardized terminology for the European labor market.
+*   **Data Structure:** Links ~3,000 **Occupations** to ~14,000 **Skills/Competences**.
+*   **Relationship Type:** **Binary**. Relationships are defined as "Essential" or "Optional". The recommender treats these as implicit feedback (1 for present, 0 for absent).
+*   **Use Case:** Broad skill discovery and alignment with European standards.
+
+### 2. O*NET (Occupational Information Network)
+*   **Region:** United States
+*   **Focus:** Detailed descriptions of the world of work for use by job seekers, workforce development, and HR professionals.
+*   **Data Structure:** A complex relational model. For this project, we extract:
+    *   **Tasks:** ~18,000 specific work activities (e.g., "Analyze financial data").
+    *   **Technology Skills:** ~8,700 specific tools and software (e.g., "Python", "JIRA").
+*   **Relationship Type:** **Weighted**. O*NET provides quantitative ratings (Importance and Level) for how relevant a task is to an occupation. This allows our WALS algorithm to use confidence weights for more accurate recommendations.
+*   **Use Case:** Granular task analysis and specific technology stack recommendations.
+
+---
+
+## Source Files
 
 ### ESCO Data
 - `esco_classification_en.zip` - ESCO classification CSV files for English
@@ -15,7 +37,7 @@ This directory contains the source data files and generated databases for the Sk
   - Contains: occupations, skills, and ratings
   - Source: [ONET Resource Center](https://www.onetcenter.org/database.html)
   - Size: ~13 MB
-  - **Note:** O*NET "Skills" are only 35 elements; the real counterpart of ESCO's thousands of skills are **Tasks** (~18k) and **Technology Skills** (~8.7k). See [ONET_OCCUPATION_TABLES.md](ONET_OCCUPATION_TABLES.md) for all occupation-linked tables.
+  - **Note:** O*NET "Skills" table contains only ~35 broad categories (e.g., "Critical Thinking"). The real counterparts to ESCO's thousands of skills are **Tasks** (~18k) and **Technology Skills** (~8.7k). See [ONET_OCCUPATION_TABLES.md](ONET_OCCUPATION_TABLES.md) for details.
 
 ## Generated Databases
 
@@ -77,7 +99,7 @@ Use `--recreate` to replace an existing database with the new schema (tasks + te
 - Imports ~8,700 technology skills and occupation-technology_skill relations (derived weight)
 - Takes ~1-2 minutes
 
-## 🔄 Regenerating Databases
+## Regenerating Databases
 
 To regenerate the databases (useful if schema changes or data corruption):
 
