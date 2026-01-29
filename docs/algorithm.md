@@ -74,19 +74,15 @@ $$
 
 Where:
 - **Weighted Gram matrix of V for observed items**:
-  $$
-  A_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} v_j v_j^T
-  $$
+$$
+A_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} v_j v_j^T
+$$
 
 - **Weighted target vector (target=1)**:
-  $$
-  b_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} \cdot 1 \cdot v_j
-  $$
+  $$b_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} \cdot 1 \cdot v_j$$
 
 - **Contribution from unobserved items** (approximated for efficiency):
-  $$
-  A_{\text{nobs}} = w_0 \left( V^T V - \sum_{j \in \text{Obs}(i)} v_j v_j^T \right)
-  $$
+  $$A_{\text{nobs}} = w_0 \left( V^T V - \sum_{j \in \text{Obs}(i)} v_j v_j^T \right)$$
 
 ### 3. Fix U, Optimize V
 Symmetric process for each skill $j$:
