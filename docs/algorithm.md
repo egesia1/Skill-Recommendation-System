@@ -74,9 +74,7 @@ $$
 
 Where:
 - **Weighted Gram matrix of V for observed items**:
-$$
-A_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} v_j v_j^T
-$$
+  $$A_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} v_j v_j^T$$
 
 - **Weighted target vector (target=1)**:
   $$b_{\text{obs}} = \sum_{j \in \text{Obs}(i)} w_{i,j} \cdot 1 \cdot v_j$$
