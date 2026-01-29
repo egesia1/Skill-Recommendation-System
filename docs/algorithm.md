@@ -97,19 +97,13 @@ $$
 
 Where:
 - **Weighted Gram matrix of U for observed occupations**:
-  $$
-  A_{\text{obs}} = \sum_{i \in \text{Obs}(j)} w_{i,j} u_i u_i^T
-  $$
+  $$A_{\text{obs}} = \sum_{i \in \text{Obs}(j)} w_{i,j} u_i u_i^T$$
 
 - **Weighted target vector**:
-  $$
-  b_{\text{obs}} = \sum_{i \in \text{Obs}(j)} w_{i,j} \cdot 1 \cdot u_i
-  $$
+  $$  b_{\text{obs}} = \sum_{i \in \text{Obs}(j)} w_{i,j} \cdot 1 \cdot u_i$$
 
 - **Contribution from unobserved occupations**:
-  $$
-  A_{\text{nobs}} = w_0 \left( U^T U - \sum_{i \in \text{Obs}(j)} u_i u_i^T \right)
-  $$
+  $$A_{\text{nobs}} = w_0 \left( U^T U - \sum_{i \in \text{Obs}(j)} u_i u_i^T \right)$$
 
 ### 4. Iterate
 Repeat steps 2-3 until convergence (RMSE stabilizes) or max iterations is reached.
@@ -178,5 +172,6 @@ $$
 ---
 
 ## References
+- Lecture 9: Recommender Systems (WMF/WALS theory)
 - Hu, Y., Koren, Y., & Volinsky, C. (2008). **Collaborative Filtering for Implicit Feedback Datasets**. (The foundational paper for WMF/WALS).
 - Pan, R., et al. (2008). **One-Class Collaborative Filtering**.
