@@ -21,6 +21,11 @@ class WeightedWALS:
     min sum_{i,j in Obs} w_{ij} (1 - u_i^T v_j)^2 + sum_{i,j not in Obs} w_0 (0 - u_i^T v_j)^2
     
     where w_{ij} = matrix[i,j] (e.g. Importance 1-5)
+    
+    IMPORTANT: In ESCO/O*NET databases, missing relations indicate "not relevant" skills,
+    not "not yet observed" skills. A missing relation means the skill has been evaluated
+    and determined to be non-relevant for that occupation. Therefore, w_0 should be set
+    appropriately to penalize predictions of high scores for non-relevant skills.
     """
     
     def __init__(self, factors=50, regularization=0.1, iterations=15, random_state=42):
@@ -46,7 +51,9 @@ class WeightedWALS:
         
         Args:
             matrix: CSR sparse matrix (M × N) - Occupation × Skill (Values are weights!)
-            w_0: Weight for unobserved entries (default: 0.01)
+            w_0: Weight for non-relevant skills (default: 0.01)
+                 In ESCO/O*NET, missing relations mean "not relevant", not "unobserved".
+                 Consider using higher values (0.1-1.0) to better penalize non-relevant skills.
             verbose: If True, prints progress during training
             save_history: If True, saves error and timing for each iteration
         
@@ -130,8 +137,9 @@ class WeightedWALS:
         M, N = matrix.shape
         k = self.factors
         
-        # Precompute V^T V (as if all entries were unobserved with weight w_0)
+        # Precompute V^T V (as if all entries were non-relevant with weight w_0)
         # This corresponds to w_0 * sum_{all j} v_j v_j^T
+        # Note: In ESCO/O*NET, missing relations mean "not relevant", not "unobserved"
         V_all_sum = self.item_factors.T @ self.item_factors
         A_base = w_0 * V_all_sum + self.regularization * np.eye(k)
         
@@ -154,6 +162,7 @@ class WeightedWALS:
                 # Explanation: We want sum_{j in Obs} w_{ij} v_j v_j^T + sum_{j not in Obs} w_0 v_j v_j^T
                 # = sum_{j in Obs} w_{ij} v_j v_j^T + sum_{all j} w_0 v_j v_j^T - sum_{j in Obs} w_0 v_j v_j^T
                 # = w_0 * V_all_sum + sum_{j in Obs} (w_{ij} - w_0) v_j v_j^T
+                # Note: "not in Obs" means "not relevant" in ESCO/O*NET, not "unobserved"
                 A += (w_ij - w_0) * np.outer(v_j, v_j)
                 
                 # Update b: sum_{j in Obs} w_{ij} c_{ij} v_j
@@ -213,8 +222,9 @@ class WeightedWALS:
                 c_ij = 1.0
                 error += w_ij * ((c_ij - pred) ** 2)
         
-        # Unobserved term: w_0 (0 - pred)^2
+        # Non-relevant term: w_0 (0 - pred)^2
         # Approximated with sample
+        # Note: In ESCO/O*NET, missing relations mean "not relevant", not "unobserved"
         sample_size = min(1000, M * N - matrix.nnz)
         if sample_size > 0:
             for _ in range(sample_size):

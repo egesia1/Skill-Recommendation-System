@@ -46,10 +46,13 @@ $$
 **Differences from Standard WALS:**
 - **Target Value**: We still treat observed entries as **binary positives (target=1)**. We are not trying to predict the rating itself (e.g., 4.5).
 - **Confidence Weights ($w_{ij}$)**: The rating determines **how confident** we are that this is a positive match. A task with Importance 5 has a higher weight in the loss function than a task with Importance 2.
-- **Unobserved Weight ($w_0$)**: Remains the baseline confidence for unknown entries (typically small, e.g., 0.05).
+- **Non-Relevant Weight ($w_0$)**: Weight for skills explicitly marked as not relevant. In ESCO/O*NET databases, **missing relations indicate "not relevant"**, not "not yet observed". A missing relation means the skill has been evaluated and determined to be non-relevant for that occupation. Consider using higher $w_0$ values (0.1-1.0) to better penalize predictions of high scores for non-relevant skills.
 
 **Why this approach?**
 In implicit feedback datasets like job descriptions, a high rating (Importance) doesn't necessarily mean "more of" a skill, but rather a "stronger signal" that the skill defines the job. This formulation allows the model to focus on reproducing the most critical skills while still learning from less important ones.
+
+**Important Note on Missing Relations:**
+Unlike typical recommendation systems (e.g., movie ratings) where missing entries mean "not yet observed", in ESCO/O*NET databases, missing relations explicitly mean "not relevant". For example, "brewing beer" is not relevant for a "Data Analyst" - the relation is missing because it has been evaluated and determined to be non-relevant, not because it hasn't been evaluated yet. This semantic difference should be reflected in the choice of $w_0$.
 
 ---
 
@@ -103,24 +106,54 @@ Repeat steps 2-3 until convergence (RMSE stabilizes) or max iterations is reache
 
 ## Recommendation Process
 
-### 1. Build Position Embedding
-Given input skills for a position, compute the position embedding as the average of skill embeddings:
+### For New Occupations (Folding-in)
 
+When creating a new "hybrid" profession that doesn't exist in the training data, we use **WALS folding-in** to find the optimal occupation embedding.
+
+#### 1. Folding-in: Solve Linear System
+Given input skills for a new position, solve the WALS linear system to find the optimal occupation vector $u_{\text{new}}$:
+
+$$
+(A_{\text{obs}} + A_{\text{nobs}} + \lambda I) u_{\text{new}} = b_{\text{obs}}
+$$
+
+Where:
+- **Observed terms** (selected skills):
+  $$A_{\text{obs}} = \sum_{j \in S_{\text{input}}} w_j v_j v_j^T$$
+  $$b_{\text{obs}} = \sum_{j \in S_{\text{input}}} w_j \cdot 1 \cdot v_j$$
+  
+- **Unobserved terms** (non-selected skills, treated as non-relevant):
+  $$A_{\text{nobs}} = w_0 \left( V^T V - A_{\text{obs}} \right)$$
+
+- **Regularization**: $\lambda I$
+
+This is the **correct method** for generative use cases where you want the system to "reason by analogy" using the learned structure from ESCO.
+
+#### 2. Predict Scores
+For all skills, compute the prediction score:
+
+$$
+\text{score}(\text{position}, \text{skill}_j) = u_{\text{new}}^T \cdot v_j
+$$
+
+#### 3. Rank and Filter
+- Sort skills by score (descending)
+- Filter out skills already in the position
+- Return top-k recommendations
+
+### Legacy Method: Simple Average (Not Recommended)
+
+The simple average method:
 $$
 u_{\text{position}} = \frac{1}{|S_{\text{input}}|} \sum_{v \in S_{\text{input}}} v
 $$
 
-### 2. Predict Scores
-For all skills, compute the prediction score:
+is an approximation that works but is **not optimal**. It doesn't account for:
+- The regularization term
+- The proper weighting of non-relevant skills ($w_0$)
+- The optimal projection into the learned latent space
 
-$$
-\text{score}(\text{position}, \text{skill}_j) = u_{\text{position}}^T \cdot v_j
-$$
-
-### 3. Rank and Filter
-- Sort skills by score (descending)
-- Filter out skills already in the position
-- Return top-k recommendations
+**Use folding-in for generative/profession creation use cases.**
 
 ---
 

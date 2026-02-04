@@ -115,6 +115,7 @@ def train_esco_model(db_path: str, output_dir: str, language: str = 'en',
         'factors': factors,
         'regularization': regularization,
         'iterations': iterations,
+        'w_0': w_0,  # Save w_0 for folding-in inference
         'matrix_shape': matrix.shape,
         'non_zero_entries': len(occupation_skill_rels)
     }
@@ -154,6 +155,9 @@ def train_onet_task_model(db_path: str, output_dir: str,
                           save_history: bool = False) -> Dict:
     """
     Trains WALS model on ONET occupation x task data (IM importance) and saves in .pkl format.
+    
+    Note: In O*NET, missing relations indicate "not relevant" tasks, not "unobserved" tasks.
+    Consider using higher w_0 values (0.1-1.0) to better penalize non-relevant tasks.
     """
     occupation_to_idx, skill_to_idx, occupation_skill_rels, idx_to_occupation_code, idx_to_skill_element_id = \
         load_onet_task_data(db_path)
@@ -184,6 +188,7 @@ def train_onet_task_model(db_path: str, output_dir: str,
         'factors': factors,
         'regularization': regularization,
         'iterations': iterations,
+        'w_0': w_0,  # Save w_0 for folding-in inference
         'matrix_shape': matrix.shape,
         'non_zero_entries': len(occupation_skill_rels),
         'weighted': True,
@@ -241,6 +246,7 @@ def train_onet_technology_skill_model(db_path: str, output_dir: str,
         'factors': factors,
         'regularization': regularization,
         'iterations': iterations,
+        'w_0': w_0,  # Save w_0 for folding-in inference
         'matrix_shape': matrix.shape,
         'non_zero_entries': len(occupation_skill_rels),
         'weighted': True,
